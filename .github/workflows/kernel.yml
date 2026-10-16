@@ -54,7 +54,7 @@ jobs:
             -v "$PWD/kernel-src:/buildd/sources" \
             -v "$PWD/packages:/buildd" \
             quay.io/droidian/build-essential:next-amd64 \
-            bash -c 'set -e; cd /buildd/sources; rm -f debian/control; debian/rules debian/control; RELENG_HOST_ARCH=arm64 releng-build-package'
+            bash -c 'set -e; apt-get update -qq; apt-get install -y -qq linux-packaging-snippets >/dev/null; cd /buildd/sources; rm -f debian/control; debian/rules debian/control; RELENG_HOST_ARCH=arm64 releng-build-package'
 
       - name: Collect boot images
         run: |
