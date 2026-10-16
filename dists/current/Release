@@ -1,20 +1,24 @@
 Architectures: arm64
 Codename: current
 Components: main
-Date: Fri, 16 Oct 2026 07:48:53 +0000
+Date: Fri, 16 Oct 2026 10:42:27 +0000
 Description: Droidian port packages for Oppo A38 (joan)
 Label: droidian-oppo-joan
 Origin: droidian-oppo-joan
 Suite: current
 MD5Sum:
- f169adfc82e7016a2242e737ba31d109              218 Release
- 8cc6e187ce7de2e34424dbc69699d447             1348 main/binary-arm64/Packages.gz
+ 4d3961a77fcc81d26aa6a2626b250255              218 Release
+ 035ed620693f757e88a0bc7873e869fb             6033 main/binary-arm64/Packages
+ 224d6ffde0caf2eb03fe46261c6f7e7a             1348 main/binary-arm64/Packages.gz
 SHA1:
- c4b88ab86fd54c9b8f12b9e023ab591a3179c350              218 Release
- 992bdf449ddd9e9d87022c859a1870988961c8c5             1348 main/binary-arm64/Packages.gz
+ 9364a96856f0d71b281aeb7c7a73083ebae2c973              218 Release
+ 1efe696dcf32767cfbf4c1b67ea783daf813a3df             6033 main/binary-arm64/Packages
+ 266e466ac5cf52994cecd1a0f89f35dcff790e5f             1348 main/binary-arm64/Packages.gz
 SHA256:
- 00b078c13f93ce7d5a9e195d4165403f02b2e607f6f209602586be0e92690f7c              218 Release
- dc831c6a680b9ec5e520deb3cbdd9ae2d279169c5b1c13b30a80d70498304c41             1348 main/binary-arm64/Packages.gz
+ 8233f3157cf141f2c7521936ecf265f26223d70e96565dedf8044d9c7d0acd39              218 Release
+ ac09d870ad98aabb66de6444492d179c16138205a8ef1eeb11211fbaa1ac18b8             6033 main/binary-arm64/Packages
+ 883be47c3f8ac704f62a0cc15118026775cd187e8ec5635bd8488a33f442d458             1348 main/binary-arm64/Packages.gz
 SHA512:
- 4d2084a580b85b216adb93f452d97dad3df01df477d56c8464a582fc1be6d2ce13f3fd48319f8dc0d0c1ad8cc2cf31cea895b1e6980dab15b9563dbb9be3b266              218 Release
- 210270bb52959cde42f37e8f28e7c13aa9deb599e0850914169a48bdd5fa83decd83e57343a730119994acf5e6ca528ee88b1babc5bd4d0c407a629596e221f2             1348 main/binary-arm64/Packages.gz
+ fd9181d57935ae65441f8f0f644dca91620667e864e4ad872321057f1e3b8ab97c083e67fa40d5b5d181c07b8a219f2b616ffca7f8d86b3ecb2ff8fb086ff84e              218 Release
+ c405d00a8ec123299f70cf3ab31c2be344715c7e7b27f758543f38470c74bb87ffadbfe5207ba368c3d512438f1ea1f493212844029d7fc374f585697f72b213             6033 main/binary-arm64/Packages
+ c13f696aa7af9fff91558aea23f9675331bf60ae1d0f34f20aa752f653d3a4f23fd01ddb21caf332fc98af6bcf063d830fa4036c28846a15a44621404caebe6d             1348 main/binary-arm64/Packages.gz
