@@ -1,0 +1,121 @@
+Package: linux-bootimage-4.19.191-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 131089
+Pre-Depends: flash-bootimage (>= 4)
+Depends: linux-image-4.19.191-oppo-joan (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
+Filename: pool/current/main/binary-arm64/linux-bootimage-4.19.191-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 69989196
+MD5sum: 7e569c0b1edbf117ba10233f72ec5493
+SHA1: c0b9457b9277e0ce30090082d3af5a4748ad8bc5
+SHA256: ecd148335bf7b9cbb6c79aaa50471994715b8672fa97174f5bfafb25c148b933
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579) - Android Boot Image
+ This package contains the Linux kernel for the Oppo A38 (CPH2579) device.
+ .
+ Note: This package ships an Android Boot Image bundled with Halium's
+ initramfs.
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
+Package: linux-bootimage-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 7
+Depends: linux-bootimage-4.19.191-oppo-joan (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
+Filename: pool/current/main/binary-arm64/linux-bootimage-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 1372
+MD5sum: e2f9ef301bd43551a4025f4adcff46d2
+SHA1: 19c602488906f3e923d74c406e322dbcc56b7a6b
+SHA256: 27240e97f404a79c6ed662066137014c17a296d23ef144438df669259df6e2c1
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579) - Android Boot Image  (latest)
+ This package depends to the latest kernel bootimage available for the Oppo A38 (CPH2579).
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
+Package: linux-headers-4.19.191-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 87279
+Depends: linux-image-4.19.191-oppo-joan (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
+Filename: pool/current/main/binary-arm64/linux-headers-4.19.191-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 10626040
+MD5sum: 52f53bfec56ffab65f1ed439a874140a
+SHA1: 44b1370aa2a65482b954a1fc428a2e6f337f8a22
+SHA256: fb16e97b9e19be1f3f80e17b66cf2c58a7ee3c781e6ea68ce1cf96cd2bcc88bd
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579) - Headers
+ This package contains the Linux kernel headers for the Oppo A38 (CPH2579) device.
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
+Package: linux-headers-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 7
+Depends: linux-headers-4.19.191-oppo-joan (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
+Filename: pool/current/main/binary-arm64/linux-headers-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 1360
+MD5sum: 341203663333719677d81edc46f1f339
+SHA1: 7a660bf4074d6d59cdbd1af33b4665f97d5e688c
+SHA256: 9c421df50a6a834e0459c0b0e3fbbba43601381b50cac00717fdd0aef9046370
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579) - Headers (latest)
+ This package depends to the latest kernel headers available for the Oppo A38 (CPH2579).
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
+Package: linux-image-4.19.191-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 28252
+Filename: pool/current/main/binary-arm64/linux-image-4.19.191-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 22808196
+MD5sum: dfc290cebf59a7c02772b52c12a5f160
+SHA1: 565a436d15e98428fb2afccef9530f3ab862b99c
+SHA256: d4bc3baf2c63d7eac4563e9c6e2a0f887811e3686f4bb07a087546d7dc73f413
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579)
+ This package contains the Linux kernel for the Oppo A38 (CPH2579) device.
+ .
+ Note: This package only ships the kernel image and modules, you should probably
+ look at the linux-bootimage-4.19.191-oppo-joan package for a bootimage suitable
+ for Android boot loaders.
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
+Package: linux-image-oppo-joan
+Source: linux-android-oppo-joan
+Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
+Architecture: arm64
+Maintainer: Droidian porters <info@droidian.org>
+Installed-Size: 7
+Depends: linux-image-4.19.191-oppo-joan (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
+Filename: pool/current/main/binary-arm64/linux-image-oppo-joan_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
+Size: 1348
+MD5sum: bc91364e212655b666e0f84a337503fa
+SHA1: 5f23a1aa9e4740994a6a05e9c2fd3b795a35662e
+SHA256: 5d2ab464f4b2b62fd9b7148e8de068b18448d7ac42573be71b6d063d2267de41
+Section: kernel
+Priority: optional
+Description: Linux kernel for Oppo A38 (CPH2579) (latest)
+ This package depends to the latest kernel image available for the Oppo A38 (CPH2579).
+X-Droidian-Vcs-Revision: 9ed8a55a8dcf0fabd72ed83fc83b9004a8d17e3d
+X-Droidian-Vcs-Url: https://github.com/oppo-source/android_kernel_oppo_mt6769
+
