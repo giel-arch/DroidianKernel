@@ -1,6 +1,6 @@
-# DroidianKernel — Oppo A38 (CPH2579, `joan`)
+# DroidianKernel — Oppo A38 (CPH2579, `cph2579`)
 
-Paket kernel Debian/Droidian (Halium 14, base Android 14) untuk **Oppo A38 CPH2579 (codename `joan`, MediaTek MT6768)**.
+Paket kernel Debian/Droidian (Halium 14, base Android 14) untuk **Oppo A38 CPH2579 (codename `cph2579`, MediaTek MT6768)**.
 
 Repo ini **tidak** menyimpan source kernel — CI meng-clone source resmi Oppo dan
 menambahkan lapisan packaging Droidian dari repo ini:
@@ -11,8 +11,8 @@ menambahkan lapisan packaging Droidian dari repo ini:
 
 ## Apa yang di-build
 
-* `linux-image-4.19.191-oppo-joan` — kernel + modul
-* `linux-bootimage-4.19.191-oppo-joan` — **boot.img** (kernel Image.gz + DTB `mt6768` + **initramfs Halium/Droidian** dari `initramfs-tools-halium`) + `vbmeta.img` kosong (verifikasi AVB dimatikan)
+* `linux-image-4.19.191-oppo-cph2579` — kernel + modul
+* `linux-bootimage-4.19.191-oppo-cph2579` — **boot.img** (kernel Image.gz + DTB `mt6768` + **initramfs Halium/Droidian** dari `initramfs-tools-halium`) + `vbmeta.img` kosong (verifikasi AVB dimatikan)
 * `linux-headers-…` dan paket "latest" (metapackage)
 
 Boot image ini adalah **halium-boot untuk base Android 14** versi Droidian:
@@ -27,9 +27,9 @@ LXC `android` yang menjalankan Halium GSI 14 di atas vendor Android 12 stock.
 debian/kernel-info.mk      # parameter boot.img (offset, cmdline, header v2) — diverifikasi dari boot_a.img
 debian/rules               # memakai droidian/linux-packaging-snippets
 droidian/
-  droidian_joan_defconfig  # CONFIG LENGKAP hasil extract-ikconfig dari boot_a.img (5841 baris)
+  droidian_cph2579_defconfig  # CONFIG LENGKAP hasil extract-ikconfig dari boot_a.img (5841 baris)
   common_fragments/        # halium.config + droidian.config (di-merge via merge_config)
-  joan.config              # hook khusus device
+  cph2579.config              # hook khusus device
 scripts/publish-apt.sh     # publikasi .deb ke gh-pages sebagai apt repo
 .github/workflows/kernel.yml
 ```
@@ -73,11 +73,17 @@ dibutuhkan agar build jalan (semuanya otomatis di workflow):
    kernel_modules. Workflow me-mount overlay-nya ke `/buildd/vendor`.
 2. **Symlink `kernel-4.19 → .`**: header charger oplus meng-include balik ke
    tree via nama dir AOSP (`../../../../kernel-4.19/drivers/...`).
-3. **Strip `-Werror`** dari Makefile drivers (MTK/oplus pin clang lama; clang
+3. **Stock DT TABLE, bukan raw FDT**: LK MTK menuntut area dtb boot.img dalam
+   format Android DT TABLE (magic `d7b7ab1e`). Raw FDT membuat LK menyerahkan
+   device tree yang rusak → boot hang di logo sebelum driver manapun (terbukti
+   di device). Base `mt6768.dtb` hasil compile tree ini ternyata **byte-identik**
+   dengan stock (md5 dicek), jadi `debian/mt6768-stock-dt.img` (table verbatim
+   dari boot_a) dikirim apa adanya.
+4. **Strip `-Werror`** dari Makefile drivers (MTK/oplus pin clang lama; clang
    modern memunculkan warning baru yang jadi error, dan
    `subdir-ccflags-y := -Werror` menimpa `KCFLAGS`).
-4. **`BUILD_CC` harus diset eksplisit** (snippet Droidian membiarkannya kosong).
-5. **`CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE=n`** (fragment joan.config): overlay
+5. **`BUILD_CC` harus diset eksplisit** (snippet Droidian membiarkannya kosong).
+6. **`CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE=n`** (fragment cph2579.config): overlay
    dtbo meng-include `oplus6769_*/cust.dtsi` yang tidak dipublish; dtbo stock
    tetap dipakai, jadi overlay tidak dibangun.
 
@@ -94,16 +100,20 @@ tidak ada di container build, ganti `CLANG_VERSION` di `debian/kernel-info.mk`.
 git clone -b oppo/mt6769_u_14.0_a38_a18 --depth=1 \
   https://github.com/oppo-source/android_kernel_oppo_mt6769 kernel-src
 cp -a debian droidian kernel-src/
-cp droidian/droidian_joan_defconfig kernel-src/arch/arm64/configs/
+cp droidian/droidian_cph2579_defconfig kernel-src/arch/arm64/configs/
 
 docker run --rm -it -v "$PWD/kernel-src:/buildd/sources" -v "$PWD/packages:/buildd" \
   quay.io/droidian/build-essential:next-amd64 bash -c \
   'cd /buildd/sources && rm -f debian/control && debian/rules debian/control && RELENG_HOST_ARCH=arm64 releng-build-package'
 ```
 
+## Kredit
+
+Port oleh **Zhantwo** (giel-arch).
+
 ## Repo terkait
 
-* **DroidianLinux** — paket adaptasi (`adaptation-oppo-joan`), build image GSI
+* **DroidianLinux** — paket adaptasi (`adaptation-oppo-cph2579`), build image GSI
   Droidian api34, dokumentasi port: <https://github.com/giel-arch/DroidianLinux>
 * Apt repo hasil CI (branch `gh-pages` repo ini):
   `deb [trusted=yes] https://giel-arch.github.io/DroidianKernel current main`

@@ -10,5 +10,22 @@ include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 # KCFLAGS is appended last, so the matching -Wno-error=<x> wins.
 MAKEOPTS += KCFLAGS="-Wno-error -Wno-error=strict-prototypes -Wno-error=implicit-int -Wno-error=incompatible-pointer-types -Wno-error=designated-init -Wno-error=implicit-function-declaration -Wno-error=date-time -Wno-error=unknown-warning-option"
 
+# --- Stock DT table (prebuilt) --------------------------------------------
+# The MTK LK expects the boot.img dtb section to be an Android DT TABLE
+# (magic d7b7ab1e), NOT a raw FDT (d00dfeed). A raw FDT there makes LK hand
+# the kernel a broken/absent device tree -> boot hangs at the logo before
+# any driver probes (verified on device, 2026-10). Our source tree compiles
+# a base mt6768.dtb byte-identical to the stock one (md5 checked), so we
+# ship the stock TABLE verbatim - same pattern as samsung-r7.
+PREBUILT_DT_NAME = mt6768-stock-dt.img
+
+prebuilt-dt-prepare:
+	mkdir -p $(KERNEL_OUT)
+	cp -f $(CURDIR)/debian/mt6768-stock-dt.img $(KERNEL_OUT)/$(PREBUILT_DT_NAME)
+
+out/KERNEL_OBJ/dtb-merged: prebuilt-dt-prepare
+
 %:
 	dh $@
+
+.PHONY: prebuilt-dt-prepare

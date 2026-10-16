@@ -1,5 +1,5 @@
 ########################################################################
-# Kernel settings - Oppo A38 (CPH2579, joan)
+# Kernel settings - Oppo A38 (CPH2579, cph2579)
 # MediaTek MT6768 | stock: oplus/ossi:14 (Android 14) on A12-era MTK vendor
 # boot header v2 | init_boot + vendor_boot partitions are ZERO-FILLED
 # (MTK keeps the whole ramdisk in boot.img).
@@ -18,21 +18,24 @@ KERNEL_BASE_VERSION = 4.19.191
 KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive loop.max_part=7 console=tty0 droidian.lvm.prefer
 
 DEVICE_VENDOR = oppo
-DEVICE_MODEL = joan
+DEVICE_MODEL = cph2579
 DEVICE_FULL_NAME = Oppo A38 (CPH2579)
 
 # Base defconfig = full stock config extracted from the boot_a kernel image
-# (CONFIG_IKCONFIG=y) shipped as droidian/droidian_joan_defconfig.
-# Deltas: droidian/common_fragments/{halium,droidian}.config + joan.config.
+# (CONFIG_IKCONFIG=y) shipped as droidian/droidian_cph2579_defconfig.
+# Deltas: droidian/common_fragments/{halium,droidian}.config + cph2579.config.
 KERNEL_CONFIG_USE_FRAGMENTS = 1
 KERNEL_CONFIG_USE_DIFFCONFIG = 0
-KERNEL_DEFCONFIG = droidian_joan_defconfig
-KERNEL_CONFIG_EXTRA_FRAGMENTS = joan.config
+KERNEL_DEFCONFIG = droidian_cph2579_defconfig
+KERNEL_CONFIG_EXTRA_FRAGMENTS = cph2579.config
 
-# DTB: stock boot.img carries a separate 139279-byte DTB section (header v2);
-# the shipped kernel is a plain gzip Image with no appended dtb.
+# DTB: the stock boot.img dtb section is an Android DT TABLE (magic
+# d7b7ab1e) - MTK LK requires that format. We ship the stock TABLE verbatim
+# (debian/mt6768-stock-dt.img; its inner FDT is byte-identical to what this
+# tree compiles). debian/rules places it into $(KERNEL_OUT) before the
+# snippet's dtb-merged step.
 KERNEL_IMAGE_WITH_DTB = 1
-KERNEL_IMAGE_DTB = arch/arm64/boot/dts/mediatek/mt6768.dtb
+KERNEL_IMAGE_DTB = mt6768-stock-dt.img
 
 # DTBO: the stock dtbo partition carries 18 oplus6769 overlays matched to the
 # unit's board revision. Do NOT build or flash a dtbo.img - keep stock.
@@ -87,7 +90,7 @@ FLASH_USE_TELNET = 0
 FLASH_INFO_MANUFACTURER = oplus
 FLASH_INFO_MODEL = ossi
 FLASH_INFO_CPU = MT6768
-FLASH_INFO_DEVICE_IDS = joan CPH2579
+FLASH_INFO_DEVICE_IDS = cph2579 CPH2579
 
 ########################################################################
 # Kernel build settings

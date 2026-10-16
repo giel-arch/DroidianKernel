@@ -55,7 +55,7 @@ jobs:
           cp -a modules-src/vendor vendor-overlay/
           cp -a debian kernel-src/debian
           cp -a droidian kernel-src/droidian
-          cp droidian/droidian_joan_defconfig kernel-src/arch/arm64/configs/
+          cp droidian/droidian_cph2579_defconfig kernel-src/arch/arm64/configs/
           # MTK/oplus Makefiles force -Werror for their pinned clang; modern
           # clang emits more diagnostics (e.g. -Wvoid-pointer-to-int-cast in
           # cmdq). Strip BARE -Werror only (keep -Werror=foo / -Werror-foo).
@@ -106,5 +106,5 @@ jobs:
           gh release delete "$TAG" --cleanup-tag -y 2>/dev/null || true
           gh release create "$TAG" packages/*.deb images/*.img \
             -t "Droidian kernel build $(date -u +%Y%m%d%H%M)" \
-            --notes "Oppo A38 (joan) kernel for Droidian (Halium 14). Flash: fastboot flash boot boot.img (both slots), fastboot flash vbmeta vbmeta.img --disable-verity --disable-verification." \
+            --notes "Oppo A38 (cph2579) kernel for Droidian (Halium 14). Flash: fastboot flash boot boot.img (both slots), fastboot flash vbmeta vbmeta.img --disable-verity --disable-verification." \
             --prerelease
