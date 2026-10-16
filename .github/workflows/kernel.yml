@@ -61,7 +61,10 @@ jobs:
           # cmdq). Strip BARE -Werror only (keep -Werror=foo / -Werror-foo).
           find kernel-src -name Makefile -o -name '*.mak' | xargs sed -i -E 's/(^|[ =])-Werror([[:space:]]|$)/\1\2/g' || true
           find vendor-overlay -name Makefile | xargs sed -i -E 's/(^|[ =])-Werror([[:space:]]|$)/\1\2/g' || true
-          grep -rn -- '-Werror' kernel-src/drivers/misc/mediatek/Makefile || echo "mediatek -Werror stripped"
+          # oplus headers reach back into the kernel tree via the AOSP dir
+          # name ('../../../../kernel-4.19/drivers/...') - replicate Oppo's
+          # real layout where the kernel tree dir is named kernel-4.19.
+          ln -sfn . kernel-src/kernel-4.19
           mkdir -p packages
 
       - name: Build kernel packages (quay.io/droidian/build-essential)
