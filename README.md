@@ -62,6 +62,25 @@ ada di `droidian/common_fragments/halium.config`.
 `init_boot` dan `vendor_boot` di perangkat ini **100% kosong (zero-fill)** —
 MTK menaruh seluruh ramdisk di `boot.img`, jadi tidak digenerate.
 
+## Trik build (ditemukan saat bring-up CI)
+
+Tree publik Oppo **tidak lengkap** — kode proprietary tidak dipublish. Yang
+dibutuhkan agar build jalan (semuanya otomatis di workflow):
+
+1. **Overlay `android_kernel_modules_oppo_mt6769`**: 60 symlink di dalam tree
+   (`kernel/sched_assist`, `drivers/soc/oplus/*`, `include/linux/*`, …) menunjuk
+   ke `../../vendor/oplus/...` di luar tree — isi `vendor/` itu ada di repo
+   kernel_modules. Workflow me-mount overlay-nya ke `/buildd/vendor`.
+2. **Symlink `kernel-4.19 → .`**: header charger oplus meng-include balik ke
+   tree via nama dir AOSP (`../../../../kernel-4.19/drivers/...`).
+3. **Strip `-Werror`** dari Makefile drivers (MTK/oplus pin clang lama; clang
+   modern memunculkan warning baru yang jadi error, dan
+   `subdir-ccflags-y := -Werror` menimpa `KCFLAGS`).
+4. **`BUILD_CC` harus diset eksplisit** (snippet Droidian membiarkannya kosong).
+5. **`CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE=n`** (fragment joan.config): overlay
+   dtbo meng-include `oplus6769_*/cust.dtsi` yang tidak dipublish; dtbo stock
+   tetap dipakai, jadi overlay tidak dibangun.
+
 ## Toolchain
 
 MTK mem-pinning clang `r383902` / `r433403b` (variant tiramisu, dipakai build
