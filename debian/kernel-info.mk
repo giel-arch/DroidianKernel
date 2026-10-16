@@ -97,13 +97,13 @@ BUILD_CROSS = 1
 BUILD_TRIPLET = aarch64-linux-gnu-
 BUILD_CLANG_TRIPLET = aarch64-linux-gnu-
 
-# MTK pins clang-r383902 (build.config.mtk.aarch64) and clang-r433403b
+# MTK pins clang-r383902 (build.config.mtk.aarch64) and clang-r433403b (clang 12.0.5) —
 # (build.config.mtk.aarch64.tiramisu - the variant used for the Android 14
 # build). If this package is unavailable in the build container, try
-# 10.0-r383902 or see the Droidian porting guide for the clang-android-*
+# 10.0-r383902 or see the Droidian porting guide for the clang-android-* packages)
 # package list.
 CLANG_CUSTOM = 0
-CLANG_VERSION = 12.0-r433403b
+CLANG_VERSION = 12.0-r416183b
 BUILD_PATH = /usr/lib/llvm-android-$(CLANG_VERSION)/bin
 
 BUILD_LLVM = 1
