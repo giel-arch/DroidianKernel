@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+include /usr/share/linux-packaging-snippets/kernel-snippet.mk
+
+# MTK 4.19 + clang: tolerate warning-class drift; without this -Werror turns
+# harmless warnings into build failures (see note10lite-droidian/linux-android-
+# samsung-r7 for the same workaround on 4.9).
+MAKEOPTS += KCFLAGS="-Wno-error"
+
+%:
+	dh $@

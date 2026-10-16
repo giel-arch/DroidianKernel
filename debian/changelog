@@ -1,0 +1,7 @@
+linux-android-oppo-joan (0.0.0.droidian) trixie; urgency=medium
+
+  * Initial Droidian (Halium 14) kernel packaging for Oppo A38 (CPH2579, joan).
+  * Defconfig extracted with extract-ikconfig from the stock boot_a.img
+    kernel image (CONFIG_IKCONFIG=y on the shipped kernel).
+
+ -- giel-arch <hypergiel88@gmail.com>  Fri, 16 Oct 2026 09:00:00 +0700

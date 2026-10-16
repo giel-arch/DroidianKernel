@@ -1,0 +1,89 @@
+name: kernel
+
+on:
+  push:
+    branches: [droidian]
+    paths:
+      - "debian/**"
+      - "droidian/**"
+      - ".github/workflows/kernel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  KERNEL_REPO: https://github.com/oppo-source/android_kernel_oppo_mt6769
+  KERNEL_BRANCH: oppo/mt6769_u_14.0_a38_a18
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
+
+      - name: Clone kernel source
+        run: |
+          git clone --depth=1 -b "$KERNEL_BRANCH" "$KERNEL_REPO" kernel-src
+          du -sh kernel-src
+
+      - name: Apply Droidian packaging
+        run: |
+          cp -a debian kernel-src/debian
+          cp -a droidian kernel-src/droidian
+          cp droidian/droidian_joan_defconfig kernel-src/arch/arm64/configs/
+          mkdir -p packages
+
+      - name: Build kernel packages (quay.io/droidian/build-essential)
+        run: |
+          docker pull quay.io/droidian/build-essential:next-amd64
+          docker run --rm \
+            -v "$PWD/kernel-src:/buildd/sources" \
+            -v "$PWD/packages:/buildd" \
+            quay.io/droidian/build-essential:next-amd64 \
+            bash -c 'set -e; cd /buildd/sources; rm -f debian/control; debian/rules debian/control; RELENG_HOST_ARCH=arm64 releng-build-package'
+
+      - name: Collect boot images
+        run: |
+          mkdir -p images
+          find kernel-src/out/KERNEL_OBJ -maxdepth 1 -name '*.img' -size +1k -exec cp -v {} images/ \; || true
+          echo "=== packages ==="; ls -la packages || true
+          echo "=== images ==="; ls -la images || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-debs
+          path: |
+            packages/*.deb
+            images/*.img
+          if-no-files-found: error
+
+      - name: Publish to apt repository (gh-pages)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/publish-apt.sh "$PWD/packages"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="latest-kernel"
+          gh release delete "$TAG" --cleanup-tag -y 2>/dev/null || true
+          gh release create "$TAG" packages/*.deb images/*.img \
+            -t "Droidian kernel build $(date -u +%Y%m%d%H%M)" \
+            --notes "Oppo A38 (joan) kernel for Droidian (Halium 14). Flash: fastboot flash boot boot.img (both slots), fastboot flash vbmeta vbmeta.img --disable-verity --disable-verification." \
+            --prerelease
