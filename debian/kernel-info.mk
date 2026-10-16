@@ -105,6 +105,9 @@ BUILD_CLANG_TRIPLET = aarch64-linux-gnu-
 CLANG_CUSTOM = 0
 CLANG_VERSION = 12.0-r416183b
 BUILD_PATH = /usr/lib/llvm-android-$(CLANG_VERSION)/bin
+# The snippet passes CC=$(BUILD_CC); without this it is EMPTY and every
+# compiler probe dies with "/bin/sh: 0: Illegal option -".
+BUILD_CC = $(BUILD_PATH)/clang
 
 BUILD_LLVM = 1
 BUILD_SKIP_MODULES = 0

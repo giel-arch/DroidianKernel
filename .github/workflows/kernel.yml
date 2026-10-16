@@ -15,6 +15,8 @@ permissions:
 env:
   KERNEL_REPO: https://github.com/oppo-source/android_kernel_oppo_mt6769
   KERNEL_BRANCH: oppo/mt6769_u_14.0_a38_a18
+  MODS_REPO: https://github.com/oppo-source/android_kernel_modules_oppo_mt6769
+  MODS_BRANCH: oppo/mt6769_u_14.0_a38_a18
 
 jobs:
   build:
@@ -38,10 +40,19 @@ jobs:
       - name: Clone kernel source
         run: |
           git clone --depth=1 -b "$KERNEL_BRANCH" "$KERNEL_REPO" kernel-src
-          du -sh kernel-src
+          git clone --depth=1 -b "$MODS_BRANCH" "$MODS_REPO" modules-src
+          du -sh kernel-src modules-src
 
-      - name: Apply Droidian packaging
+      - name: Apply Droidian packaging + oplus vendor overlay
         run: |
+          # 60 symlinks inside the kernel tree (kernel/sched_assist,
+          # drivers/soc/oplus/*, ...) point to ../../vendor/oplus/... - i.e.
+          # a vendor/ dir NEXT TO the kernel tree. That content is proprietary
+          # and only published in the kernel_modules repo: overlay it at the
+          # parent level. /buildd/sources = kernel-src, so the container also
+          # mounts the overlay at /buildd/vendor.
+          mkdir -p vendor-overlay
+          cp -a modules-src/vendor vendor-overlay/
           cp -a debian kernel-src/debian
           cp -a droidian kernel-src/droidian
           cp droidian/droidian_joan_defconfig kernel-src/arch/arm64/configs/
@@ -53,6 +64,7 @@ jobs:
           docker run --rm \
             -v "$PWD/kernel-src:/buildd/sources" \
             -v "$PWD/packages:/buildd" \
+            -v "$PWD/vendor-overlay/vendor:/buildd/vendor" \
             quay.io/droidian/build-essential:next-amd64 \
             bash -c 'set -e; apt-get update -qq; apt-get install -y -qq linux-packaging-snippets >/dev/null; cd /buildd/sources; rm -f debian/control; debian/rules debian/control; RELENG_HOST_ARCH=arm64 releng-build-package'
 
