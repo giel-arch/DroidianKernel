@@ -112,7 +112,8 @@ BUILD_CC = $(BUILD_PATH)/clang
 BUILD_LLVM = 1
 BUILD_SKIP_MODULES = 0
 
-DEB_TOOLCHAIN = binutils-aarch64-linux-gnu
+# arm64 variant: the snippet reads the initramfs from the arm64 multiarch path
+DEB_TOOLCHAIN = linux-initramfs-halium-generic:arm64, binutils-aarch64-linux-gnu
 
 DEB_BUILD_ON = amd64
 DEB_BUILD_FOR = arm64
