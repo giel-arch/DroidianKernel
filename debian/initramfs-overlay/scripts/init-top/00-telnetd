@@ -1,6 +1,6 @@
 #!/bin/sh
-# ALWAYS-ON bring-up shell: set up RNDIS + telnetd ~15s into the initramfs,
-# no matter where the boot later stalls. Debug aid for the CPH2579 port.
+# ALWAYS-ON bring-up diagnostics: RNDIS + telnetd + dropbear ~15s into the
+# initramfs, kernel log forced visible on the framebuffer console.
 PREREQ=""
 prereqs() { echo "$PREREQ"; }
 case $1 in
@@ -14,11 +14,16 @@ GADGET_DIR=/config/usb_gadget
 write() { echo -n "$2" >"$1" 2>/dev/null; }
 
 (
-    sleep 15
+    # restore full kernel printk to the console (LK may append quiet/loglevel)
+    echo 7 > /proc/sys/kernel/printk 2>/dev/null
+    dmesg -n 7 2>/dev/null
+    echo "==== cph2579 initrd debug overlay alive ====" > /dev/console 2>&1
 
-    mkdir -p /dev/pts
+    mkdir -p /dev/pts /run
     grep -q devpts /proc/mounts 2>/dev/null || \
         mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts 2>/dev/null
+    ls -l /dev/ptmx > /dev/console 2>&1
+    ls /dev/pts > /dev/console 2>&1
 
     mkdir -p /config
     mount -t configfs none /config 2>/dev/null
@@ -29,11 +34,10 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
         write $ANDROID_USB/idVendor 18D1
         write $ANDROID_USB/idProduct D001
         write $ANDROID_USB/iManufacturer "Halium initrd"
-        write $ANDROID_USB/iProduct "initrd telnet 192.168.2.15"
+        write $ANDROID_USB/iProduct "initrd ssh 192.168.2.15"
         write $ANDROID_USB/iSerial "cph2579 bring-up"
         write $ANDROID_USB/functions rndis
         write $ANDROID_USB/enable 1
-        G_USB_ISERIED=yes
     elif [ -d $GADGET_DIR ]; then
         mkdir $GADGET_DIR/g1 2>/dev/null
         write $GADGET_DIR/g1/idVendor "0x18D1"
@@ -41,7 +45,7 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
         mkdir -p $GADGET_DIR/g1/strings/0x409
         write $GADGET_DIR/g1/strings/0x409/serialnumber "cph2579 bring-up"
         write $GADGET_DIR/g1/strings/0x409/manufacturer "Halium initrd"
-        write $GADGET_DIR/g1/strings/0x409/product "initrd telnet 192.168.2.15"
+        write $GADGET_DIR/g1/strings/0x409/product "initrd ssh 192.168.2.15"
         mkdir -p $GADGET_DIR/g1/functions/rndis.usb0 2>/dev/null
         mkdir -p $GADGET_DIR/g1/configs/c.1/strings/0x409 2>/dev/null
         write $GADGET_DIR/g1/configs/c.1/strings/0x409/configuration "rndis"
@@ -56,11 +60,19 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
 
     if [ x$IFACE = xnotfound ]; then
         echo "init-top/00-telnetd: USB setup FAILED" > /dev/console 2>&1
-        dmesg | tail -20 > /dev/console 2>&1
         exit 0
     fi
+    echo "init-top/00-telnetd: shell services on $IFACE $LOCAL_IP (telnet:23 ssh:22)" > /dev/console 2>&1
 
-    echo "init-top/00-telnetd: telnetd on $IFACE $LOCAL_IP:23" > /dev/console 2>&1
-    busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null || \
-        busybox telnetd -l /bin/sh 2>/dev/null
+    busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null
+
+    sed -i 's|:x:|::|' /etc/passwd 2>/dev/null
+    mkdir -p /etc/dropbear
+    dropbear -R -B -E -p 22 2>/dev/null || dropbear -R -B -E 2>/dev/null
+
+    # continuously mirror the kernel log to the framebuffer console
+    while :; do
+        dmesg | tail -35 > /dev/console 2>&1
+        sleep 15
+    done
 ) &
