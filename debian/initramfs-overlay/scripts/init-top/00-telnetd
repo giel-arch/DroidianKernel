@@ -1,0 +1,66 @@
+#!/bin/sh
+# ALWAYS-ON bring-up shell: set up RNDIS + telnetd ~15s into the initramfs,
+# no matter where the boot later stalls. Debug aid for the CPH2579 port.
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+case $1 in
+prereqs) prereqs; exit 0 ;;
+esac
+
+LOCAL_IP=192.168.2.15
+ANDROID_USB=/sys/class/android_usb/android0
+GADGET_DIR=/config/usb_gadget
+
+write() { echo -n "$2" >"$1" 2>/dev/null; }
+
+(
+    sleep 15
+
+    mkdir -p /dev/pts
+    grep -q devpts /proc/mounts 2>/dev/null || \
+        mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts 2>/dev/null
+
+    mkdir -p /config
+    mount -t configfs none /config 2>/dev/null
+
+    if [ -d $ANDROID_USB ]; then
+        write $ANDROID_USB/enable 0
+        write $ANDROID_USB/functions ""
+        write $ANDROID_USB/idVendor 18D1
+        write $ANDROID_USB/idProduct D001
+        write $ANDROID_USB/iManufacturer "Halium initrd"
+        write $ANDROID_USB/iProduct "initrd telnet 192.168.2.15"
+        write $ANDROID_USB/iSerial "cph2579 bring-up"
+        write $ANDROID_USB/functions rndis
+        write $ANDROID_USB/enable 1
+        G_USB_ISERIED=yes
+    elif [ -d $GADGET_DIR ]; then
+        mkdir $GADGET_DIR/g1 2>/dev/null
+        write $GADGET_DIR/g1/idVendor "0x18D1"
+        write $GADGET_DIR/g1/idProduct "0xD001"
+        mkdir -p $GADGET_DIR/g1/strings/0x409
+        write $GADGET_DIR/g1/strings/0x409/serialnumber "cph2579 bring-up"
+        write $GADGET_DIR/g1/strings/0x409/manufacturer "Halium initrd"
+        write $GADGET_DIR/g1/strings/0x409/product "initrd telnet 192.168.2.15"
+        mkdir -p $GADGET_DIR/g1/functions/rndis.usb0 2>/dev/null
+        mkdir -p $GADGET_DIR/g1/configs/c.1/strings/0x409 2>/dev/null
+        write $GADGET_DIR/g1/configs/c.1/strings/0x409/configuration "rndis"
+        ln -sf $GADGET_DIR/g1/functions/rndis.usb0 $GADGET_DIR/g1/configs/c.1
+        UDC=$(ls /sys/class/udc 2>/dev/null | grep -v dummy | head -1)
+        write $GADGET_DIR/g1/UDC "$UDC"
+    fi
+
+    IFACE=notfound
+    /sbin/ifconfig rndis0 $LOCAL_IP 2>/dev/null && IFACE=rndis0
+    [ x$IFACE = xnotfound ] && /sbin/ifconfig usb0 $LOCAL_IP 2>/dev/null && IFACE=usb0
+
+    if [ x$IFACE = xnotfound ]; then
+        echo "init-top/00-telnetd: USB setup FAILED" > /dev/console 2>&1
+        dmesg | tail -20 > /dev/console 2>&1
+        exit 0
+    fi
+
+    echo "init-top/00-telnetd: telnetd on $IFACE $LOCAL_IP:23" > /dev/console 2>&1
+    busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null || \
+        busybox telnetd -l /bin/sh 2>/dev/null
+) &

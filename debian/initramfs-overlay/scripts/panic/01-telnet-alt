@@ -1,0 +1,17 @@
+#!/bin/sh
+# Second, independent telnetd on port 24 in case the one started by
+# panic/telnet is in a broken state (silent sessions).
+PREREQ=""
+prereqs() { echo "$PREREQ"; }
+case $1 in
+prereqs) prereqs; exit 0 ;;
+esac
+
+(
+    sleep 5
+    mkdir -p /dev/pts
+    grep -q devpts /proc/mounts 2>/dev/null || \
+        mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts 2>/dev/null
+    echo "initrd: backup telnetd on port 24" > /dev/console 2>&1
+    busybox telnetd -b 0.0.0.0:24 -l /bin/sh 2>/dev/null
+) &
