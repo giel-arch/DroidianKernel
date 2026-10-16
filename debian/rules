@@ -5,7 +5,10 @@ include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 # MTK 4.19 + clang: tolerate warning-class drift; without this -Werror turns
 # harmless warnings into build failures (see note10lite-droidian/linux-android-
 # samsung-r7 for the same workaround on 4.9).
-MAKEOPTS += KCFLAGS="-Wno-error"
+# 4.19's Makefile promotes specific diagnostics with -Werror=<x>; Oppo's
+# proprietary code (sched_assist & co) violates several of them with clang 12.
+# KCFLAGS is appended last, so the matching -Wno-error=<x> wins.
+MAKEOPTS += KCFLAGS="-Wno-error -Wno-error=strict-prototypes -Wno-error=implicit-int -Wno-error=incompatible-pointer-types -Wno-error=designated-init -Wno-error=implicit-function-declaration -Wno-error=date-time -Wno-error=unknown-warning-option"
 
 %:
 	dh $@
