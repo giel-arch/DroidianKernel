@@ -59,7 +59,6 @@ jobs:
           # MTK/oplus Makefiles force -Werror for their pinned clang; modern
           # clang emits more diagnostics (e.g. -Wvoid-pointer-to-int-cast in
           # cmdq). Strip BARE -Werror only (keep -Werror=foo / -Werror-foo).
-          find kernel-src drivers -maxdepth 0 >/dev/null
           find kernel-src -name Makefile -o -name '*.mak' | xargs sed -i -E 's/(^|[ =])-Werror([[:space:]]|$)/\1\2/g' || true
           find vendor-overlay -name Makefile | xargs sed -i -E 's/(^|[ =])-Werror([[:space:]]|$)/\1\2/g' || true
           grep -rn -- '-Werror' kernel-src/drivers/misc/mediatek/Makefile || echo "mediatek -Werror stripped"
