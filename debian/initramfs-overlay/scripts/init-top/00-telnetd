@@ -79,6 +79,35 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
     busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null
     busybox telnetd -b 0.0.0.0:25 -l /bin/sh 2>/dev/null
 
+    ############################################################
+    # UDP push channel + fork/exec liveness probes
+    # PC:  socat -u UDP-RECV:9999 - | tee v7-dump.txt
+    #  or: nc -lu 9999 > v7-dump.txt
+    ############################################################
+    DST=192.168.2.1
+    push() { { echo "==== $1 ===="; shift; "$@"; } 2>&1 | busybox nc -u -w1 $DST 9999; }
+
+    (
+        sleep 2
+        push "PROBE0-parent-alive" sh -c 'echo parent-shell-exec-ok'
+        sleep 3
+        push "PROBE1-fork-child" sh -c 'echo fork-child-exec-ok'
+        ( echo "PROBE2-background-subshell-ok" | busybox nc -u -w1 $DST 9999 ) &
+        sleep 2
+        busybox setsid sh -c 'echo PROBE3-setsid-exec-ok | busybox nc -u -w1 192.168.2.1 9999' 2>/dev/null
+        sleep 2
+        push "PROBE4-state" sh -c 'cat /proc/cmdline; echo; cat /proc/loadavg; echo; cat /sys/devices/system/cpu/online; echo OFFLINE=$(cat /sys/devices/system/cpu/offline 2>/dev/null); echo; cat /proc/sys/kernel/printk; echo; ps -w 2>/dev/null | head -25; echo; ls -l /dev/ptmx /dev/console 2>&1; echo; ls /dev/pts 2>&1; echo; cat /proc/mounts | head -15; echo; ls /dev/disk/by-partlabel/ 2>&1'
+        sleep 2
+        push "DMESG-TAIL" sh -c 'dmesg | tail -80'
+    ) &
+
+    (
+        while :; do
+            dmesg | tail -25 | busybox nc -u -w1 $DST 9999 2>/dev/null
+            sleep 10
+        done
+    ) &
+
     # unlock root: passwd gets a KNOWN hash (password: droidian)
     sed -i 's|^root:[^:]*:|root:$1$cph2579$wJqIiEMrBy6CfP1kXY62P.:|' /etc/passwd 2>/dev/null
     [ -f /etc/shadow ] && sed -i 's|^root:[^:]*:|root:$1$cph2579$wJqIiEMrBy6CfP1kXY62P.:|' /etc/shadow 2>/dev/null
