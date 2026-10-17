@@ -62,9 +62,18 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
         echo "init-top/00-telnetd: USB setup FAILED" > /dev/console 2>&1
         exit 0
     fi
-    echo "init-top/00-telnetd: shell services on $IFACE $LOCAL_IP (telnet:23 ssh:22)" > /dev/console 2>&1
+    echo "init-top/00-telnetd: shell services on $IFACE $LOCAL_IP (telnet:23/25 ssh:22)" > /dev/console 2>&1
+
+    # DHCP server so the PC automatically gets an address on the RNDIS link
+    echo "start 192.168.2.20" >/etc/udhcpd.conf
+    echo "end 192.168.2.90" >>/etc/udhcpd.conf
+    echo "lease_file /var/udhcpd.leases" >>/etc/udhcpd.conf
+    echo "interface $IFACE" >>/etc/udhcpd.conf
+    echo "option subnet 255.255.255.0" >>/etc/udhcpd.conf
+    busybox udhcpd 2>/dev/null
 
     busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null
+    busybox telnetd -b 0.0.0.0:25 -l /bin/sh 2>/dev/null
 
     sed -i 's|:x:|::|' /etc/passwd 2>/dev/null
     mkdir -p /etc/dropbear
