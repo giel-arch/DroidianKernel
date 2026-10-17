@@ -79,11 +79,31 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
     busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null
     busybox telnetd -b 0.0.0.0:25 -l /bin/sh 2>/dev/null
 
-    # unlock root for blank-password auth (passwd AND shadow)
-    sed -i 's|:x:|::|' /etc/passwd 2>/dev/null
-    sed -i 's/^root:[^:]*:/root::/' /etc/shadow 2>/dev/null
+    # unlock root: passwd gets a KNOWN hash (password: droidian)
+    sed -i 's|^root:[^:]*:|root:$1$cph2579$wJqIiEMrBy6CfP1kXY62P.:|' /etc/passwd 2>/dev/null
+    [ -f /etc/shadow ] && sed -i 's|^root:[^:]*:|root:$1$cph2579$wJqIiEMrBy6CfP1kXY62P.:|' /etc/shadow 2>/dev/null
     mkdir -p /etc/dropbear
     dropbear -R -B -E -p 22 2>/dev/null || dropbear -R -B -E 2>/dev/null
+
+    # HTTP diagnostics - works even if interactive sessions are broken
+    mkdir -p /www
+    (
+        while :; do
+            {
+                echo "<html><body><pre>"
+                echo "== cmdline =="; cat /proc/cmdline
+                echo "== dmesg tail 100 =="; dmesg | tail -100 | sed 's/</\</g'
+                echo "== partlabel =="; ls /dev/disk/by-partlabel/ 2>/dev/null
+                echo "== mounts =="; cat /proc/mounts
+                echo "== lvm =="; lvs 2>&1; vgs 2>&1; pvs 2>&1
+                echo "== pstore =="; ls /sys/fs/pstore/ 2>/dev/null
+                echo "== ps =="; ps -ef 2>/dev/null || ps
+                echo "</pre></body></html>"
+            } > /www/index.html 2>&1
+            sleep 10
+        done
+    ) &
+    busybox httpd -p 80 -h /www 2>/dev/null
 
     # continuously mirror the kernel log to the framebuffer console
     while :; do
