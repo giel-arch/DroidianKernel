@@ -1,24 +1,24 @@
 Architectures: arm64
 Codename: current
 Components: main
-Date: Sat, 17 Oct 2026 00:50:47 +0000
+Date: Sat, 17 Oct 2026 01:22:09 +0000
 Description: Droidian port packages for Oppo A38 (cph2579)
 Label: droidian-oppo-cph2579
 Origin: droidian-oppo-cph2579
 Suite: current
 MD5Sum:
- d48f9afd8632047f04243a103fd6c4e3              227 Release
- b472a5f3be171c2eefe6c904467510a0            12138 main/binary-arm64/Packages
- fcbf2ddb2dd560c108e856f3d0778d6e             2045 main/binary-arm64/Packages.gz
+ 836acda1f1bb0455deadba06649c07c1              227 Release
+ 8e1808b700c62e1344eac05c7c318ed8            12138 main/binary-arm64/Packages
+ 479d8f345ac85263cff2d309e60e7501             2048 main/binary-arm64/Packages.gz
 SHA1:
- 5e9e9c7f17c23366b87dc030ddbc057e567c4969              227 Release
- 9edd1cc5e655323f857e9e81cba8d06751a462b5            12138 main/binary-arm64/Packages
- a8a2329ab95e29e6cf3ad1a01b041826961ead92             2045 main/binary-arm64/Packages.gz
+ bfebd2d296a2452ec20aa7c61394bd3aa8738f6e              227 Release
+ f53e9d72b79461e2a3a5170c4c249c1add042703            12138 main/binary-arm64/Packages
+ b27f287a8d62eeeac52f950b227600ffb6b0e1ed             2048 main/binary-arm64/Packages.gz
 SHA256:
- f54130c4d13a927b042ab0b659b0b9fde01df05fc6cd6b28831069d8b0666f04              227 Release
- 8f00a3d62baefa556321f2c9e46b599ede740661e42180517795ce3d4bd41991            12138 main/binary-arm64/Packages
- 6da300bfe43628332d7d2efc9328d2f9529f7bb5978ce3cc1fa57dd189deb7cc             2045 main/binary-arm64/Packages.gz
+ 109429c79ca08a112c6c7ae17c0b4a50216af660f4050ae3fb65694681ecf1b9              227 Release
+ 0efafd48050078bb50aa9615c415dca4cd7e109bf5212e5ee6448a4a55654b65            12138 main/binary-arm64/Packages
+ 90a4c902c4ffbf0ea24948d04d9ef80d24162e693d814b80fd040be03c7f571f             2048 main/binary-arm64/Packages.gz
 SHA512:
- 6ae9438a044f998d8ca54d21fe12ede7b9d7e509ec764be46efbef8d93824788ff543ce370ee876a66043afc9604e8a767c3151d8d5d38d4f69c78f613288cff              227 Release
- 6653b9c73b9bae605764ad6afcac265ebadcc7c697c7332a83e795cbbb9b20bff8c154b540ede94fd1330902de07b05db71e78c78a6d84ce254a2d7e59b6d53d            12138 main/binary-arm64/Packages
- f59fd0bc948dcf547d201c0ebc9815c910d1bc8beb51205b567fd388cc95cb0b614091c44bdc11bedc8dfe3ed87b930fb6ae2d313bb1d0dda0201d28acbcf897             2045 main/binary-arm64/Packages.gz
+ 47179b45b277fd00fd37925961137a76c56ac8cbca49054bf3ca3d49f9f1f1c5ba1eb0e30ae0cfb4fff832456bf31018505686e1fa93ebeb24a92446841bd0be              227 Release
+ 3b3846a45a5dcdbc72d4ddc80ce6bd2323d54b7be2b6c1de7023bb66839942bd8ed73e0ab38122dfe99d6996752bd3eb1f42775add42311f23d59aa8d8791e5f            12138 main/binary-arm64/Packages
+ 6ea88863875a761575d96e36eab89fb8579110f7ad93c378e2e956525ddc59632584ac8c3a1f88ab7d08c5871d9fcb41fe09c2e50c7c7626ec858afa5a6c5648             2048 main/binary-arm64/Packages.gz
