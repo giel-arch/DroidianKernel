@@ -114,6 +114,33 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
     mkdir -p /etc/dropbear
     dropbear -R -B -E -p 22 2>/dev/null || dropbear -R -B -E 2>/dev/null
 
+    # Post-mortem via mtkclient: keep writing kmsg + state snapshot to the
+    # expdb partition (MTK exception/debug, 40 MiB -> 81920 x 512B sectors).
+    # Read it back from BROM mode:  python3 -m mtk r expdb expdb.bin
+    # (MTK aee-ipanic additionally records real kernel panics there itself.)
+    (
+        sleep 3
+        EXPDB=""
+        for p in /sys/class/block/mmcblk0p*; do
+            [ "$(cat $p/size 2>/dev/null)" = "81920" ] && EXPDB=/dev/$(basename $p) && break
+        done
+        if [ -n "$EXPDB" ]; then
+            echo "init-top: post-mortem log -> $EXPDB (expdb)" > /dev/console 2>&1
+            while :; do
+                {
+                    echo "==== snapshot $(cat /proc/uptime) ===="
+                    echo "== cmdline =="; cat /proc/cmdline 2>/dev/null
+                    echo "== kmsg tail =="; dmesg 2>/dev/null | tail -c 300000
+                    echo "== mounts =="; cat /proc/mounts 2>/dev/null
+                    echo "== ps =="; ps -w 2>/dev/null
+                } > $EXPDB 2>/dev/null
+                sleep 5
+            done
+        else
+            echo "init-top: expdb partition not found" > /dev/console 2>&1
+        fi
+    ) &
+
     # HTTP diagnostics - works even if interactive sessions are broken
     mkdir -p /www
     (
