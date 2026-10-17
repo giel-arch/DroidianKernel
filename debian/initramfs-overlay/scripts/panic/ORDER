@@ -1,0 +1,6 @@
+/scripts/panic/telnet "$@"
+[ -e /conf/param.conf ] && . /conf/param.conf
+/scripts/panic/00-debug-console "$@"
+[ -e /conf/param.conf ] && . /conf/param.conf
+/scripts/panic/01-telnet-alt "$@"
+[ -e /conf/param.conf ] && . /conf/param.conf

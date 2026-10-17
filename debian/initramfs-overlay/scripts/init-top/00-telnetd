@@ -54,11 +54,15 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
         write $GADGET_DIR/g1/UDC "$UDC"
     fi
 
-    IFACE=notfound
-    /sbin/ifconfig rndis0 $LOCAL_IP 2>/dev/null && IFACE=rndis0
-    [ x$IFACE = xnotfound ] && /sbin/ifconfig usb0 $LOCAL_IP 2>/dev/null && IFACE=usb0
+    # The halium break handler may already have configured 192.168.2.15 on
+    # an interface - detect that instead of bailing out.
+    IFACE=$(ifconfig -a 2>/dev/null | awk '/^[a-zA-Z0-9_]+:/{i=$1} /192\.168\.2\.15/{print i; exit}' | tr -d ':')
+    if [ -z "$IFACE" ]; then
+        /sbin/ifconfig rndis0 $LOCAL_IP 2>/dev/null && IFACE=rndis0
+        [ -z "$IFACE" ] && /sbin/ifconfig usb0 $LOCAL_IP 2>/dev/null && IFACE=usb0
+    fi
 
-    if [ x$IFACE = xnotfound ]; then
+    if [ -z "$IFACE" ]; then
         echo "init-top/00-telnetd: USB setup FAILED" > /dev/console 2>&1
         exit 0
     fi
