@@ -139,6 +139,30 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
                 echo "== ps =="; ps -w 2>/dev/null
                 echo "== kmsg tail =="; dmesg 2>/dev/null | tail -c 300000
             } > $EXPDB 2>/dev/null
+            # wait for the droidian rootfs (mounted by mountroot), then
+            # inject: debug warm-reboot cycle + plymouth masks
+            W=0
+            while [ ! -d /root/etc/systemd/system ] && [ $W -lt 300 ]; do
+                sleep 1; W=$((W+1))
+            done
+            if [ -d /root/etc/systemd/system ] && [ ! -e /root/.droidian-debug-injected ]; then
+                {
+                    echo "[Unit]"
+                    echo "Description=CPH2579 bring-up warm reboot cycle"
+                    echo "[Service]"
+                    echo "Type=oneshot"
+                    echo "ExecStart=/bin/sh -c 'sleep 240; systemctl reboot --force'"
+                    echo "[Install]"
+                    echo "WantedBy=multi-user.target"
+                } > /root/etc/systemd/system/droidian-debug-cycle.service 2>/dev/null
+                mkdir -p /root/etc/systemd/system/multi-user.target.wants 2>/dev/null
+                ln -sf ../droidian-debug-cycle.service /root/etc/systemd/system/multi-user.target.wants/droidian-debug-cycle.service 2>/dev/null
+                for u in plymouth.service plymouth-start.service plymouth-read-write.service; do
+                    ln -sf /dev/null /root/etc/systemd/system/$u 2>/dev/null
+                done
+                touch /root/.droidian-debug-injected 2>/dev/null
+                echo "init-top: debug-cycle + plymouth masks injected into rootfs" > /dev/console 2>&1
+            fi
             # after ~240s of the (headless) boot, do a WARM reboot so the
             # next boot's pstore snapshot captures this boot's full console
             # (DRAM survives kernel_restart; power-hold does NOT).
@@ -162,6 +186,10 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
                         echo "---- $f ----"; cat "$f" 2>/dev/null | tail -c 200000
                     done
                     echo "== mounts =="; cat /proc/mounts 2>/dev/null
+                    echo "== rootfs fstab =="; cat /root/etc/fstab 2>/dev/null
+                    echo "== rootfs image.fstab =="; cat /root/run/image.fstab 2>/dev/null
+                    echo "== rootfs writable-paths =="; cat /root/etc/system-image/writable-paths 2>/dev/null
+                    echo "== trace.log =="; cat /run/trace.log 2>/dev/null
                     echo "== ps =="; ps -w 2>/dev/null
                     echo "== kmsg tail =="; dmesg 2>/dev/null | tail -c 300000
                 } > $EXPDB 2>/dev/null
