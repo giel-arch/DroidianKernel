@@ -139,7 +139,21 @@ write() { echo -n "$2" >"$1" 2>/dev/null; }
                 echo "== ps =="; ps -w 2>/dev/null
                 echo "== kmsg tail =="; dmesg 2>/dev/null | tail -c 300000
             } > $EXPDB 2>/dev/null
+            # after ~240s of the (headless) boot, do a WARM reboot so the
+            # next boot's pstore snapshot captures this boot's full console
+            # (DRAM survives kernel_restart; power-hold does NOT).
+            N=0
             while :; do
+                N=$((N+1))
+                if [ $N -ge 45 ]; then
+                    {
+                        echo "==== FINAL snapshot (auto warm-reboot now) ===="
+                        echo "== kmsg tail =="; dmesg 2>/dev/null | tail -c 300000
+                        echo "== ps =="; ps -w 2>/dev/null
+                    } > $EXPDB 2>/dev/null
+                    sync
+                    echo b > /proc/sysrq-trigger 2>/dev/null || reboot -f
+                fi
                 {
                     echo "==== snapshot $(cat /proc/uptime) ===="
                     echo "== PSTORE (previous boot panic log!) =="
