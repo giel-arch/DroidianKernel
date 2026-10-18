@@ -15,7 +15,11 @@ KERNEL_BASE_VERSION = 4.19.191
 # Stock cmdline is: bootopt=64S3,32N2,64N2 buildvariant=user
 # Appended: permissive selinux for the Halium LXC container, loop partitions,
 # console, and the droidian.lvm.prefer entry Droidian needs (no 'systempart').
-KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive loop.max_part=7 console=tty0 droidian.lvm.prefer
+# mtk_printk_ctrl.disable_uart=0 + printk.force_uart=1: MTK's patched
+# console_unlock() SKIPS every CON_CONSDEV console when uart logging is
+# 'disabled' (LK passes disable_uart=1) - that killed fbcon output AND the
+# pstore ramoops console at ~4.7s (verified in expdb post-mortem).
+KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive loop.max_part=7 console=tty0 mtk_printk_ctrl.disable_uart=0 printk.force_uart=1 droidian.lvm.prefer
 
 DEVICE_VENDOR = oppo
 DEVICE_MODEL = cph2579
