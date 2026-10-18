@@ -27,7 +27,7 @@ export quiet
 # Note that this only becomes /dev on the real filesystem if udev's scripts
 # are used; which they will be, but it's worth pointing out
 mount -t devtmpfs -o nosuid,mode=0755 udev /dev
-trace() { echo "init-trace: $1" > /dev/kmsg 2>/dev/null; }
+trace() { mkdir -p /run 2>/dev/null; echo "init-trace: $1" >> /run/trace.log 2>/dev/null; echo "init-trace: $1" > /dev/kmsg 2>/dev/null; }
 mkdir /dev/pts
 mount -t devpts -o noexec,nosuid,gid=5,mode=0620 devpts /dev/pts || true
 mount -t tmpfs -o "noexec,nosuid,size=10%,mode=0755" tmpfs /run

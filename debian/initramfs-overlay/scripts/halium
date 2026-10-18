@@ -19,7 +19,7 @@ pre_mountroot() {
 	[ "$quiet" != "y" ] && log_end_msg
 }
 
-_t() { echo "halium-trace: $1" > /dev/kmsg 2>/dev/null; }
+_t() { mkdir -p /run 2>/dev/null; echo "$(cut -d\  -f1 /proc/uptime 2>/dev/null) halium-trace: $1" >> /run/trace.log 2>/dev/null; echo "halium-trace: $1" > /dev/kmsg 2>/dev/null; }
 
 tell_kmsg() {
 	# Echos a string into /dev/kmsg, ignoring errors.
