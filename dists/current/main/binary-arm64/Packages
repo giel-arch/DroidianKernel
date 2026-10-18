@@ -7,10 +7,10 @@ Installed-Size: 131089
 Pre-Depends: flash-bootimage (>= 4)
 Depends: linux-image-4.19.191-oppo-cph2579 (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
 Filename: pool/current/main/binary-arm64/linux-bootimage-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
-Size: 69846336
-MD5sum: c2250ce510c461c556ace1250b585cc2
-SHA1: 8f491971b13d9ab8cbb2434cef9a61d2500be6cf
-SHA256: 9f875b0dcf8e2a7b9d9302d1160c4b066d8254d58a12bffd7ee98fbf10516ac7
+Size: 69876500
+MD5sum: 1d8a28d0c54cb0a6fe7ea24325621abd
+SHA1: 0b90524806706a527553debade0741459c3bca45
+SHA256: 84d9f9d64ea5eb9e46540d0131e592988d7f9d2291043b33ad9028eabe3dc13e
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579) - Android Boot Image
@@ -87,13 +87,13 @@ Source: linux-android-oppo-cph2579
 Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
 Architecture: arm64
 Maintainer: Droidian porters <info@droidian.org>
-Installed-Size: 87282
+Installed-Size: 87281
 Depends: linux-image-4.19.191-oppo-cph2579 (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
 Filename: pool/current/main/binary-arm64/linux-headers-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
-Size: 10626680
-MD5sum: f55d02aeeb6118b49c39232a0243858d
-SHA1: 99738b5510a09238dc4d2587d4d196c5271cf475
-SHA256: 123f87f0d634d6a77b8fa24a78ca76bd2ea03492baa028ea6688be32bdaea05d
+Size: 10626704
+MD5sum: 5f47bcd79c9fac677d215de16dd625ea
+SHA1: f7fb30a34d3a19d1563f849d51cb7a5b899530dd
+SHA256: 0986c01784296dfd0265fcb801201f1d2d210d431928afef047ac89e26c282e8
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579) - Headers
@@ -163,12 +163,12 @@ Source: linux-android-oppo-cph2579
 Version: 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18
 Architecture: arm64
 Maintainer: Droidian porters <info@droidian.org>
-Installed-Size: 28137
+Installed-Size: 28124
 Filename: pool/current/main/binary-arm64/linux-image-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
-Size: 22776488
-MD5sum: 7b125af8f8fb1ff9141e3c73f83a4a31
-SHA1: ccf199c760d30ac8de6caa1d5728bbe015bbd76e
-SHA256: d8f7085d21e3bbc61ac43859890de25a226892201d29834902c1ab1f2669c242
+Size: 22790372
+MD5sum: b293db433822898092960e2ffef6f6b2
+SHA1: 47554a6a1975e9c574c5c33f9dd5f567b523c3ea
+SHA256: 31276c469d35b90e1fb2f3573a28f1f60d58b23aac88085a6bce0fa869eee734
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579)
