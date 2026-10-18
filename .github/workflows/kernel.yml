@@ -43,6 +43,15 @@ jobs:
           git clone --depth=1 -b "$MODS_BRANCH" "$MODS_REPO" modules-src
           du -sh kernel-src modules-src
 
+      - name: Apply kernel patches
+        run: |
+          cd kernel-src
+          shopt -s nullglob
+          for p in "$GITHUB_WORKSPACE"/kernel-patches/*.patch; do
+            echo "applying $(basename $p)"
+            patch -p1 < "$p"
+          done
+
       - name: Apply Droidian packaging + oplus vendor overlay
         run: |
           # 60 symlinks inside the kernel tree (kernel/sched_assist,

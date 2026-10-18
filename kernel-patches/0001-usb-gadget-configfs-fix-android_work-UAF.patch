@@ -1,0 +1,101 @@
+--- a/drivers/usb/gadget/configfs.c	2026-10-18 08:47:38.709097057 +0800
++++ b/drivers/usb/gadget/configfs.c	2026-10-18 08:47:39.062747466 +0800
+@@ -27,6 +27,7 @@
+ #endif
+ static struct class *android_class;
+ static struct device *android_device;
++static DEFINE_MUTEX(android_device_lock);
+ static int index;
+ 
+ struct device *create_function_device(char *name)
+@@ -421,6 +422,8 @@
+ 	WARN_ON(!list_empty(&gi->cdev.configs));
+ 	WARN_ON(!list_empty(&gi->string_list));
+ 	WARN_ON(!list_empty(&gi->available_func));
++	/* a pending android_work would UAF gi and android_device */
++	cancel_work_sync(&gi->work);
+ 	kfree(gi->composite.gadget_driver.function);
+ 	kfree(gi);
+ }
+@@ -1497,6 +1500,15 @@
+ 	}
+ 	spin_unlock_irqrestore(&cdev->lock, flags);
+ 
++	/* android_device can be destroyed concurrently (gadget teardown);
++	 * taking the reference under the lock avoids the use-after-free
++	 * that panics with "Fatal exception" in kobject_uevent_env. */
++	mutex_lock(&android_device_lock);
++	if (!android_device) {
++		mutex_unlock(&android_device_lock);
++		return;
++	}
++
+ 	if (status[0]) {
+ 		kobject_uevent_env(&android_device->kobj,
+ 					KOBJ_CHANGE, connected);
+@@ -1522,6 +1534,8 @@
+ 		uevent_sent = true;
+ 	}
+ 
++	mutex_unlock(&android_device_lock);
++
+ 	if (!uevent_sent) {
+ 		pr_info("%s: did not send uevent (%d %d %p)\n", __func__,
+ 			gi->connected, gi->sw_connected, cdev->config);
+@@ -1794,11 +1808,13 @@
+ 	struct device_attribute **attrs;
+ 	struct device_attribute *attr;
+ 
+-	INIT_WORK(&gi->work, android_work);
++	mutex_lock(&android_device_lock);
+ 	android_device = device_create(android_class, NULL,
+ 				MKDEV(0, 0), NULL, "android0");
+-	if (IS_ERR(android_device))
++	if (IS_ERR(android_device)) {
++		mutex_unlock(&android_device_lock);
+ 		return PTR_ERR(android_device);
++	}
+ 
+ 	dev_set_drvdata(android_device, gi);
+ 
+@@ -1810,10 +1826,13 @@
+ 		if (err) {
+ 			device_destroy(android_device->class,
+ 				       android_device->devt);
++			android_device = NULL;
++			mutex_unlock(&android_device_lock);
+ 			return err;
+ 		}
+ 	}
+ 
++	mutex_unlock(&android_device_lock);
+ 	return 0;
+ }
+ 
+@@ -1822,10 +1841,17 @@
+ 	struct device_attribute **attrs;
+ 	struct device_attribute *attr;
+ 
++	mutex_lock(&android_device_lock);
++	if (!android_device) {
++		mutex_unlock(&android_device_lock);
++		return;
++	}
+ 	attrs = android_usb_attributes;
+ 	while ((attr = *attrs++))
+ 		device_remove_file(android_device, attr);
+ 	device_destroy(android_device->class, android_device->devt);
++	android_device = NULL;
++	mutex_unlock(&android_device_lock);
+ }
+ #else
+ static inline int android_device_create(struct gadget_info *gi)
+@@ -1850,6 +1876,8 @@
+ 	if (!gi)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	INIT_WORK(&gi->work, android_work);
++
+ 	config_group_init_type_name(&gi->group, name, &gadget_root_type);
+ 
+ 	config_group_init_type_name(&gi->functions_group, "functions",
