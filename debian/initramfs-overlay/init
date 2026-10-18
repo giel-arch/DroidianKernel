@@ -230,9 +230,9 @@ mount_top
 mount_premount
 trace "mountroot returned"
 trace "fstab content follows:"
-cat ${rootmnt}/etc/fstab > /dev/kmsg 2>/dev/null
+cat ${rootmnt}/etc/fstab >> /run/trace.log 2>/dev/null
 trace "writable-paths content follows:"
-cat ${rootmnt}/etc/system-image/writable-paths > /dev/kmsg 2>/dev/null
+cat ${rootmnt}/etc/system-image/writable-paths >> /run/trace.log 2>/dev/null
 trace "checking for /usr fstab entry"
 log_end_msg
 
