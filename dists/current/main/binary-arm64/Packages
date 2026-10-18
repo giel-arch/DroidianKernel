@@ -7,10 +7,10 @@ Installed-Size: 131089
 Pre-Depends: flash-bootimage (>= 4)
 Depends: linux-image-4.19.191-oppo-cph2579 (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
 Filename: pool/current/main/binary-arm64/linux-bootimage-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
-Size: 69933276
-MD5sum: 754e8b000be5e8d94c996cc05029c25b
-SHA1: 637073dd2fb1c1e412629d3bc2f35fb8b221212d
-SHA256: 7aafd3e19d0c0aefca5c9bb622fbf3338bb97743e8a15cd83967142f4aa61668
+Size: 69930888
+MD5sum: 23cd22b956866132a0f4f4f53ba21cfa
+SHA1: 5e493ea45c55e7b13212f009b6fb1c79261ac0e4
+SHA256: 7d3a8137a185b9335332dd3083636fc701de2b98918f5fe8a2873642d8d38b6e
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579) - Android Boot Image
@@ -91,9 +91,9 @@ Installed-Size: 87261
 Depends: linux-image-4.19.191-oppo-cph2579 (= 0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18)
 Filename: pool/current/main/binary-arm64/linux-headers-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
 Size: 10622108
-MD5sum: 1170fe0c733458b913e9114658b0fabf
-SHA1: 01ccf2660f9710cf011b1c8d50652cce0c988d9c
-SHA256: bb9a508c8cc59833a11a9a9ed6d3ff6bf1556d3de16b1a659eaa875e939e4c79
+MD5sum: 30dd6883af9751a07eb1376ccdbcf57f
+SHA1: e0786155512b203813f4e5b11608f1b6159580a5
+SHA256: dad9446b8be1613c878a20ccef766bcfa8863ee1dcb70059ff35bce8028da823
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579) - Headers
@@ -165,10 +165,10 @@ Architecture: arm64
 Maintainer: Droidian porters <info@droidian.org>
 Installed-Size: 28116
 Filename: pool/current/main/binary-arm64/linux-image-4.19.191-oppo-cph2579_0.0.0+git20240507023502.9ed8a55.oppo.mt6769~u~14.0~a38~a18_arm64.deb
-Size: 22816704
-MD5sum: 4e24d6c261ef2bc9ee1041811dc09b07
-SHA1: 7db8b26fdf34e6a6e5864a47ea6f69b3a054e784
-SHA256: da2300bf5fdc7dd29296d421545c4c41774a020515445f1269bd83c140ed2347
+Size: 22815328
+MD5sum: f27374c0a399db330d751d787d009207
+SHA1: f994eee9a1195e80a642c8deaf9ff537e032aea8
+SHA256: cd646a1e91b7509419d4b1d1a8226613fd6f9c92370fded4ff3cc100ad6a1fd3
 Section: kernel
 Priority: optional
 Description: Linux kernel for Oppo A38 (CPH2579)
