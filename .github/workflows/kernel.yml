@@ -92,7 +92,7 @@ jobs:
           # the 'premount' stage with telnetd on 192.168.2.15 (usb RNDIS), so
           # early-boot hangs can be inspected from a PC. NOT for daily use.
           docker run --rm -v "$PWD/kernel-src:/buildd/sources" \
-            quay.io/droidian/build-essential:next-amd64 bash -c 'set -e; K=/buildd/sources/out/KERNEL_OBJ; mkbootimg --header_version 2 --kernel $K/arch/arm64/boot/Image.default --dtb $K/dtb-merged --dtb_offset 0x0bc80000 --ramdisk $K/initramfs.gz --pagesize 2048 --base 0x40000000 --kernel_offset 0x00080000 --ramdisk_offset 0x07c80000 --second_offset 0x00000000 --tags_offset 0x0bc80000 --os_version 12.0.0 --os_patch_level 2024-12 --cmdline "bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive loop.max_part=7 console=tty0 ignore_loglevel mtk_printk_ctrl.disable_uart=0 printk.force_uart=1 droidian.lvm.prefer break=premount" -o $K/boot-debug.img && ls -la $K/boot-debug.img'
+            quay.io/droidian/build-essential:next-amd64 bash -c 'set -e; K=/buildd/sources/out/KERNEL_OBJ; mkbootimg --header_version 2 --kernel $K/arch/arm64/boot/Image.default --dtb $K/dtb-merged --dtb_offset 0x0bc80000 --ramdisk $K/initramfs.gz --pagesize 2048 --base 0x40000000 --kernel_offset 0x00080000 --ramdisk_offset 0x07c80000 --second_offset 0x00000000 --tags_offset 0x0bc80000 --os_version 12.0.0 --os_patch_level 2024-12 --cmdline "bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive loop.max_part=7 console=tty0 ignore_loglevel mtk_printk_ctrl.disable_uart=0 mtk_printk_ctrl.force_uart=1 droidian.lvm.prefer break=premount" -o $K/boot-debug.img && ls -la $K/boot-debug.img'
 
       - name: Collect boot images
         run: |

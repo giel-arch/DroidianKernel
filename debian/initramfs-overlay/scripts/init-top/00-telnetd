@@ -14,7 +14,10 @@ GADGET_DIR=/config/usb_gadget
 write() { echo -n "$2" >"$1" 2>/dev/null; }
 
 (
-    # restore full kernel printk to the console (LK may append quiet/loglevel)
+    # restore full kernel printk to the console
+    # LK appends mtk_printk_ctrl.disable_uart=1 AFTER our cmdline (last wins),
+    # so re-enable at runtime: /proc/mtprintk val 1 = mt_enable_uart()
+    echo 1 > /proc/mtprintk 2>/dev/null
     echo 7 > /proc/sys/kernel/printk 2>/dev/null
     dmesg -n 7 2>/dev/null
     echo "==== cph2579 initrd debug overlay alive ====" > /dev/console 2>&1
